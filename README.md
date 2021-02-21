@@ -12,6 +12,16 @@ This crates handles structures in ZIP files.
 - Local file header structure
   - Data descriptor structure
 
+## Installation
+
+Add the following line to `[dependencies]` in your `Cargo.toml`.
+
+```toml
+zip_structs = "^0.1"
+```
+
+Breaking changes to the API are planned for the future.  Therefore, it is strongly recommended to use this versioning format.
+
 ## Basic usage of parsing from the EOCD sturcture of a ZIP archive
 
 ```rust
