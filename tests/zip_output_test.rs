@@ -49,10 +49,16 @@ fn zip_clone_test() -> anyhow::Result<()> {
     let output_zip_cd = output_zip_cd_list.pop().unwrap();
     let output_zip_local_header =
         ZipLocalFileHeader::from_central_directory(&mut zip_reread_vfile, &output_zip_cd)?;
-    assert_eq!(output_zip_cd.local_header_position,cd.local_header_position);
+    assert_eq!(
+        output_zip_cd.local_header_position,
+        cd.local_header_position
+    );
     assert_eq!(output_zip_cd.file_name_raw, local_file_header.file_name_raw);
     assert_eq!(output_zip_local_header.file_name_raw, cd.file_name_raw);
-    assert_eq!(output_zip_local_header.compressed_data, local_file_header.compressed_data);
+    assert_eq!(
+        output_zip_local_header.compressed_data,
+        local_file_header.compressed_data
+    );
 
     Ok(())
 }
