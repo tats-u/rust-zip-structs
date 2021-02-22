@@ -54,6 +54,19 @@ for cd in &cd_list {
 }
 ```
 
+## Competing libraries
+
+There are some libraries providing more abstract and higher-level APIs.
+
+- `zip`
+- `rc-zip`
+
+These libraries do not handle general purpose bit flags in central directories and local file headers.  `rc-zip` cannot handle file names encoded in other than UTF-8.
+
+- `vfs-zip`
+
+This library provides virtual file system, not structures in ZIP archives.
+
 ## Support of ZIP64
 
 This library has not supported ZIP64 yet.
