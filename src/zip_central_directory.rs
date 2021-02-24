@@ -1,5 +1,6 @@
 use super::zip_eocd::ZipEOCD;
 use super::zip_error::ZipReadError;
+use super::zip_local_file_header::ZipLocalFileHeader;
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
 use bytesize::ByteSize;
 use std::io::prelude::*;
@@ -305,4 +306,49 @@ impl ZipCDEntry {
         }
         return Ok(result);
     }
+
+    /// Generate a central directory from the given local file header
+    ///
+    /// Paths ending with `/` will be recognized as directories.
+    ///
+    /// # Arguments
+    ///
+    /// * `file_header` - local file header structure
+    /// * `signature_position` - the position of the signature of **central directory** (not local file header)
+    pub fn from_local_file_header(
+        file_header: &ZipLocalFileHeader,
+        signature_position: u64,
+    ) -> Self {
+        return Self {
+            compressed_size: file_header.compressed_size,
+            compression_method: file_header.compression_method,
+            crc32: file_header.crc32,
+            disk_number_start: 0,
+            external_file_attributes: if is_directory(&file_header.file_name_raw) {
+                0x0000_0010 // 1 << 4: directory flag
+            } else {
+                0
+            },
+            extra_field: file_header.extra_field.clone(),
+            extra_field_length: file_header.extra_field_length,
+            file_comment: vec![], // no comment
+            file_comment_length: 0,
+            file_name_length: file_header.file_name_length,
+            file_name_raw: file_header.file_name_raw.clone(),
+            general_purpose_flags: file_header.general_purpose_flags,
+            internal_file_attributes: 0, // assuming the file is binary
+            last_mod_date: file_header.last_mod_date,
+            last_mod_time: file_header.last_mod_time,
+            local_header_position: file_header.starting_position_with_signature as u32,
+            starting_position_with_signature: signature_position,
+            starting_position_without_signature: signature_position + CD_MAGIC.len() as u64,
+            uncompressed_size: file_header.uncompressed_size,
+            version_made_by: 0, // MS-DOS compatible
+            version_required_to_extract: file_header.version_required_to_extract,
+        };
+    }
+}
+
+fn is_directory(path: &[u8]) -> bool {
+    return path.last() == Some(&b'/');
 }
