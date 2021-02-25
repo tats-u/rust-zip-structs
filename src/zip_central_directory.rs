@@ -265,7 +265,7 @@ impl ZipCDEntry {
     /// # Arguments
     ///
     /// * `read` - file handler (must be at the head of the signature)
-    fn read_and_generate_from_signature<T: ReadBytesExt + std::io::Seek>(
+    pub fn read_and_generate_from_signature<T: ReadBytesExt + std::io::Seek>(
         read: &mut T,
     ) -> Result<Self, ZipReadError> {
         let mut signature_candidate: [u8; 4] = [0; 4];

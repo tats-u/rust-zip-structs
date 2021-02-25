@@ -212,16 +212,14 @@ impl ZipLocalFileHeader<'_> {
         return (DATA_DESCRIPTOR_EXISTS_FLAG_BIT & self.general_purpose_flags) != 0;
     }
 
-    /// Examines the signature, reads the local file header and returns an instance that represents it
+    /// Reads local file header from the cjurrent position.
     ///
     /// # Arguments
     ///
-    /// * `read` - file handler (must be at the head of the signature)
-    pub fn from_central_directory<T: ReadBytesExt + std::io::Seek>(
+    /// * `read` - file handler (must be at the start of the signature)
+    pub fn read_and_generate_from_signature<T: ReadBytesExt + std::io::Seek>(
         read: &mut T,
-        cd: &ZipCDEntry,
     ) -> Result<Self, ZipReadError> {
-        read.seek(SeekFrom::Start(cd.local_header_position as u64))?;
         let mut signature_candidate: [u8; 4] = [0; 4];
         let start_pos = read.seek(SeekFrom::Current(0))?;
         read.read_exact(&mut signature_candidate)?;
@@ -235,6 +233,20 @@ impl ZipLocalFileHeader<'_> {
         }
         let mut ret = Self::empty();
         ret.read_without_signature(read)?;
+        return Ok(ret);
+    }
+
+    /// Examines the signature, reads the local file header and returns an instance that represents it
+    ///
+    /// # Arguments
+    ///
+    /// * `read` - file handler (must be at the head of the signature)
+    pub fn from_central_directory<T: ReadBytesExt + std::io::Seek>(
+        read: &mut T,
+        cd: &ZipCDEntry,
+    ) -> Result<Self, ZipReadError> {
+        read.seek(SeekFrom::Start(cd.local_header_position as u64))?;
+        let ret = Self::read_and_generate_from_signature(read)?;
         return Ok(ret);
     }
 
