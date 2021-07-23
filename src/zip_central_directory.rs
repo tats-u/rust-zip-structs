@@ -13,8 +13,12 @@ const CD_MAGIC: [u8; 4] = [0x50, 0x4b, 0x1, 0x2];
 pub const DATA_ENCRYPTED_FLAG_BIT: u16 = 0x0001;
 /// bit #3 (0x0008 = 1 << 3) of general purpose bit flag
 pub const DATA_DESCRIPTOR_EXISTS_FLAG_BIT: u16 = 0x0008;
+/// bit #6 (0x0040 = 1 <<< 6) of general purpose bit flag
+pub const DATA_STRONGLY_ENCRYPTED_FLAG_BIT: u16 = 0x0040;
 /// bit #11 (0x0800 = 1 << 11) of general purpose bit flag
 pub const UTF8_FLAG_BIT: u16 = 0x0800;
+/// bit #13 (0x2000 = 1 << 13) of general purpose bit flag
+pub const CENTRAL_DIRECTORY_ENCRYPTED_FLAG_BIT: u16 = 0x2000;
 
 /// ZIPファイルのセントラルディレクトリの1エントリー
 /// An entry of central directory of ZIP file
@@ -215,6 +219,16 @@ impl ZipCDEntry {
     pub fn is_encrypted_data(&self) -> bool {
         return (DATA_ENCRYPTED_FLAG_BIT & self.general_purpose_flags) != 0;
     }
+    //// Returns whether the file content is strongly (e.g. AES / Blowfish / Twofish) encrypted
+    ///
+    /// See `version_required_to_extract` to identify the used encryption algorithm
+    pub fn is_strongly_encrypted_data(&self) -> bool {
+        return (DATA_STRONGLY_ENCRYPTED_FLAG_BIT & self.general_purpose_flags) != 0;
+    }
+    /// Returns whether the central directory is encrypted
+    pub fn is_encrypted_central_directory(&self) -> bool {
+        return (CENTRAL_DIRECTORY_ENCRYPTED_FLAG_BIT & self.general_purpose_flags) != 0;
+    }
     /// Returns `Error` if the file and central directory have unsupported features
     pub fn check_unsupported(&self) -> Result<(), ZipReadError> {
         if self.disk_number_start != 0 {
@@ -222,9 +236,9 @@ impl ZipCDEntry {
                 reason: "it is one of splitted arvhives".to_string(),
             });
         }
-        if self.is_encrypted_data() {
+        if self.is_encrypted_central_directory() {
             return Err(ZipReadError::UnsupportedZipArchive {
-                reason: "encrypted data is not supported".to_string(),
+                reason: "encrypted central directory is not supported".to_string(),
             });
         }
         return Ok(());
