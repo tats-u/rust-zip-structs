@@ -13,12 +13,12 @@ keywords = ["zip", "archive"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-byteorder = "1.4.2"
-thiserror = "1.0.24"
+byteorder = "1.4.3"
+thiserror = "1.0.25"
 bytesize = "1.0.1"
 regex = "1"
 
 [dev-dependencies]
-anyhow = "1.0.38"
-vfs = "0.5.0"
+anyhow = "1.0.41"
+vfs = "0.5.1"
 rusty-hook = "0.11.2"
