@@ -17,7 +17,7 @@ This crates handles structures in ZIP files.
 Add the following line to `[dependencies]` in your `Cargo.toml`.
 
 ```toml
-zip_structs = "^0.1"
+zip_structs = "^0.2"
 ```
 
 Breaking changes to the API are planned for the future.  Therefore, it is strongly recommended to use this versioning format.
