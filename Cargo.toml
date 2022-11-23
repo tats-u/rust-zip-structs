@@ -17,7 +17,6 @@ include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
 byteorder = "1.4.3"
 thiserror = "1.0.25"
 bytesize = "1.0.1"
-regex = "1"
 
 [dev-dependencies]
 anyhow = "1.0.41"
