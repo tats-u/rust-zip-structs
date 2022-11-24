@@ -1,6 +1,6 @@
 [package]
 name = "zip_structs"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Tatsunori Uchino <tats.u@live.jp>"]
 edition = "2018"
 license = "MIT"
@@ -15,10 +15,10 @@ include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
 
 [dependencies]
 byteorder = "1.4.3"
-thiserror = "1.0.25"
-bytesize = "1.0.1"
+thiserror = "1.0.37"
+bytesize = "1.1.0"
 
 [dev-dependencies]
-anyhow = "1.0.41"
-vfs = "0.5.1"
+anyhow = "1.0.66"
+vfs = "0.5.2"
 rusty-hook = "0.11.2"
